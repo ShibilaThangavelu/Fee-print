@@ -127,12 +127,14 @@ def save_reference_rate(r: ReferenceRate, path=None) -> int:
 # ------------------------------------------------------------------ reads
 
 def latest_quotes(receive_currency: str = "INR", path=None) -> list[dict]:
-    """The most recent quote per provider for one corridor, with provider details."""
+    """The most recent quote per provider for one corridor, with provider and evidence details."""
     with closing(connect(path)) as conn:
         rows = conn.execute(
-            """SELECT q.*, p.name AS provider_name, p.pricing_url
+            """SELECT q.*, p.name AS provider_name, p.pricing_url,
+                      c.url AS source_url, c.content_hash, c.fetched_at AS captured_at
                FROM extracted_quotes q
                JOIN providers p ON p.id = q.provider_id
+               LEFT JOIN captures c ON c.id = q.capture_id
                WHERE q.receive_currency = ?
                  AND q.extracted_at = (
                      SELECT MAX(extracted_at) FROM extracted_quotes
