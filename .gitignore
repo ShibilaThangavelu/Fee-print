@@ -1,0 +1,15 @@
+# macOS
+.DS_Store
+
+# Office temp/lock files (e.g. ~$e-Print_document.docx)
+~$*
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+
+# Local secrets and data
+.env
+*.db

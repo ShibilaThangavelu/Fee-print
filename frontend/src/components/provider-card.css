@@ -1,0 +1,116 @@
+.provider-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px;
+  display: grid;
+  gap: 10px 16px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-areas:
+    "name name name"
+    "amount amount amount"
+    "fee markup speed"
+    "footer footer footer";
+}
+
+.provider-card.is-best {
+  border: 2px solid var(--accent);
+}
+
+.pc-name {
+  grid-area: name;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.pc-name-text {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.pc-badge {
+  align-self: flex-start;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+.badge-best { background: var(--tint-bg); color: var(--accent-dark); }
+.badge-neutral { background: var(--chip-bg); color: var(--muted); }
+.badge-stale { background: var(--warn-bg); color: var(--warn-text); }
+
+.pc-amount {
+  grid-area: amount;
+  font-family: var(--font-mono);
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.pc-amount-best { color: var(--accent-dark); }
+
+.pc-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 13px;
+}
+
+.pc-metric-label { color: var(--muted); }
+.pc-metric-value { font-family: var(--font-mono); font-weight: 600; }
+.pc-speed-value { font-family: var(--font-body); }
+
+.pc-fee { grid-area: fee; }
+.pc-markup { grid-area: markup; }
+.pc-total { grid-area: total; display: none; }
+.pc-speed { grid-area: speed; }
+
+.pc-actions {
+  grid-area: actions;
+  display: none;
+}
+
+.pc-footer {
+  grid-area: footer;
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.pc-footer.is-stale { color: var(--warn-text); }
+
+.pc-footer-link {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+@media (min-width: 900px) {
+  .provider-card {
+    grid-template-columns: 240px 220px 130px 130px 170px 150px minmax(0, 1fr);
+    grid-template-areas:
+      "name amount fee markup total speed actions"
+      "footer footer footer footer footer footer footer";
+    align-items: center;
+    padding: 22px 28px;
+  }
+
+  .pc-name { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .pc-amount { font-size: 24px; }
+  .pc-total { display: flex; }
+  .pc-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    font-size: 15px;
+    font-weight: 600;
+  }
+  .pc-footer-link { display: none; }
+}

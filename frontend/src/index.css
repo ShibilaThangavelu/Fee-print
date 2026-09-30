@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=IBM+Plex+Mono:wght@500;600&family=Public+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg: #F2F4F1;
+  --white: #FFFFFF;
+  --text: #0F2A2C;
+  --muted: #45585A;
+  --accent: #0B6B4E;
+  --accent-dark: #08513B;
+  --border: #D9E0DC;
+  --border-strong: #9DB0AA;
+  --tint-bg: #E1F0EA;
+  --warn-bg: #FBEFD9;
+  --warn-text: #7A4A00;
+  --chip-bg: #EEF1EF;
+
+  --font-heading: 'Bricolage Grotesque', Helvetica, sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --font-body: 'Public Sans', Helvetica, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--text);
+  background: var(--bg);
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+a:hover { color: var(--accent-dark); }
+
+button { font-family: var(--font-body); cursor: pointer; }
+
+.container {
+  max-width: 1312px;
+  margin: 0 auto;
+  padding: 0 64px;
+}
+
+@media (max-width: 900px) {
+  .container { padding: 0 20px; }
+}
