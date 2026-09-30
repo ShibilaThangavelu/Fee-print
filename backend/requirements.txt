@@ -8,3 +8,4 @@ pydantic>=2.7
 beautifulsoup4>=4.12
 playwright>=1.45
 pytest>=8.0
+google-genai>=1.0

@@ -13,3 +13,6 @@ __pycache__/
 # Local secrets and data
 .env
 *.db
+
+# Saved provider pages (evidence) - can be large
+backend/captures/
