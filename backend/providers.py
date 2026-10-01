@@ -19,6 +19,8 @@ PROVIDERS = [
         "amount_input": None,  # CSS selector of the "You send" box, if an amount must be typed
         "wait_for": None,      # CSS selector that appears once prices have loaded
         "selectors": {"fee": None, "rate": None, "speed": None},
+        # Wise lists a fee per pay-in method; we compare the bank transfer one.
+        "fee_regex": r"Bank transfer\s+(\d[\d,]*(?:\.\d+)?)\s*AUD",
     },
     {
         "id": "remitly",
