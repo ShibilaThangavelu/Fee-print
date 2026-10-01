@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
-import { getQuotes } from '../lib/api';
+import { getMidRate } from '../lib/api';
 import { money, shortTime } from '../lib/format';
 import './search-page.css';
 
@@ -25,7 +25,7 @@ export default function SearchPage() {
     // A cheap call just to surface the current mid-market rate live,
     // the same way the real search Lambda would look it up before the
     // user even hits "Compare".
-    getQuotes({ amount: 1, to: dest })
+    getMidRate(dest)
       .then((data) => {
         if (!cancelled) setMidRate(data.mid_market_rate);
       })

@@ -31,6 +31,10 @@ export function getQuoteDetail(providerId, { amount, to, method = 'bank_transfer
   return request(`/api/quotes/${encodeURIComponent(providerId)}?${params.toString()}`);
 }
 
+export function getMidRate(to) {
+  return request(`/api/rate?to=${encodeURIComponent(to)}`);
+}
+
 export function getCurrencies() {
   return request('/api/currencies');
 }

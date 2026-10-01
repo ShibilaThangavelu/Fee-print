@@ -13,7 +13,12 @@ import db
 import main
 from models import Capture, ExtractedQuote, Provider, ReferenceRate
 
-client = TestClient(main.app)
+anon = TestClient(main.app)
+
+
+@pytest.fixture(autouse=True)
+def client(signed_in_client):
+    return signed_in_client
 
 
 @pytest.fixture(autouse=True)
@@ -37,13 +42,13 @@ def seed_wise():
         speed_text="1-2 business days", speed_min_hours=24, speed_max_hours=48))
 
 
-def test_sample_data_used_and_labelled_when_nothing_scraped():
+def test_sample_data_used_and_labelled_when_nothing_scraped(client):
     body = client.get("/api/quotes?amount=1000&to=INR").json()
     assert body["source"] == "mock"
     assert len(body["providers"]) > 0
 
 
-def test_real_quotes_used_once_scraped():
+def test_real_quotes_used_once_scraped(client):
     seed_wise()
     body = client.get("/api/quotes?amount=1000&to=INR").json()
     assert body["source"] == "database"
@@ -54,7 +59,7 @@ def test_real_quotes_used_once_scraped():
     assert body["mid_market_rate"]["source"] == "test source"
 
 
-def test_detail_has_calculation_steps_and_evidence():
+def test_detail_has_calculation_steps_and_evidence(client):
     seed_wise()
     body = client.get("/api/quotes/wise?amount=1000&to=INR").json()
     assert body["source"] == "database"
@@ -66,7 +71,7 @@ def test_detail_has_calculation_steps_and_evidence():
     assert ev["fee_text"] == "Transfer fee: A$3.99" and ev["rate_text"] == "1 AUD = 66.80 INR"
 
 
-def test_unknown_provider_is_404_and_bad_currency_is_400():
+def test_unknown_provider_is_404_and_bad_currency_is_400(client):
     seed_wise()
     assert client.get("/api/quotes/nobody?amount=1000&to=INR").status_code == 404
     assert client.get("/api/quotes?amount=1000&to=XXX").status_code == 400
