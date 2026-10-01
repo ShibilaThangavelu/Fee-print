@@ -141,6 +141,14 @@ def current_user(request: Request):
         return conn.execute("SELECT * FROM users WHERE id = ?", (int(claims["sub"]),)).fetchone()
 
 
+def require_user(request: Request):
+    """FastAPI dependency: only signed-in users get through, everyone else gets 401."""
+    row = current_user(request)
+    if row is None:
+        raise HTTPException(status_code=401, detail="Please sign in to compare providers.")
+    return row
+
+
 # ---------------------------------------------------------------- routes
 
 class SignUpBody(BaseModel):

@@ -13,6 +13,7 @@ export default function AuthPage({ mode }) {
   const location = useLocation();
   // Send people back to where they were (e.g. a results page) after signing in.
   const from = location.state?.from || '/';
+  const needsLogin = location.state?.reason === 'compare';
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -46,8 +47,10 @@ export default function AuthPage({ mode }) {
           <h1>{isSignUp ? 'Create your account' : 'Welcome back'}</h1>
           <p className="auth-sub">
             {isSignUp
-              ? 'Comparing transfers is always free. An account is optional.'
-              : 'Sign in to your FeePrint account.'}
+              ? 'Create a free account to compare providers.'
+              : needsLogin
+                ? 'Sign in to compare providers.'
+                : 'Sign in to your FeePrint account.'}
           </p>
 
           <GoogleButton
@@ -107,9 +110,9 @@ export default function AuthPage({ mode }) {
 
           <p className="auth-switch">
             {isSignUp ? (
-              <>Already have an account? <Link to="/signin" state={{ from }}>Sign in</Link></>
+              <>Already have an account? <Link to="/signin" state={{ from, reason: location.state?.reason }}>Sign in</Link></>
             ) : (
-              <>New to FeePrint? <Link to="/signup" state={{ from }}>Create an account</Link></>
+              <>New to FeePrint? <Link to="/signup" state={{ from, reason: location.state?.reason }}>Create an account</Link></>
             )}
           </p>
         </div>

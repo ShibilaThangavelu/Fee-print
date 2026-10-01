@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 
 load_dotenv()  # reads backend/.env (GOOGLE_CLIENT_ID, SESSION_SECRET) before auth imports them
 
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import Depends, FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 
 import auth
@@ -79,7 +79,13 @@ def _quotes(amount: float, to: str, method: str) -> dict:
     return result
 
 
-@app.get("/api/quotes")
+@app.get("/api/rate")
+def public_rate(to: str = Query("INR", min_length=3, max_length=3)):
+    """Public teaser for the search page: today's mid-market rate only, no provider data."""
+    return {"mid_market_rate": _quotes(1000, to, "bank_transfer")["mid_market_rate"]}
+
+
+@app.get("/api/quotes", dependencies=[Depends(auth.require_user)])
 def quotes(
     amount: float = Query(1000, gt=0, le=1_000_000),
     to: str = Query("INR", min_length=3, max_length=3),
@@ -91,7 +97,7 @@ def quotes(
     return _quotes(amount, to, method)
 
 
-@app.get("/api/quotes/{provider_id}")
+@app.get("/api/quotes/{provider_id}", dependencies=[Depends(auth.require_user)])
 def quote_detail(
     provider_id: str,
     amount: float = Query(1000, gt=0, le=1_000_000),
