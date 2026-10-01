@@ -8,6 +8,8 @@ Usage (from backend/, with the venv active):
   python scrape.py                                   # all providers
   python scrape.py --provider wise                   # one provider
   python scrape.py --provider wise --show            # watch the browser work
+  python scrape.py --provider wise --html captures/wise/<file>.html --force-llm
+        # test the Gemini fallback on a saved page (nothing stored)
   python scrape.py --provider wise --html captures/wise/<file>.html
         # re-run extraction on a saved page: no browser, nothing stored
 """
@@ -38,7 +40,8 @@ def _short(err: Exception) -> str:
 
 
 def run_provider(cfg: dict, amount: float, mid: ReferenceRate | None,
-                 html_file: str | None = None, headless: bool = True) -> bool:
+                 html_file: str | None = None, headless: bool = True,
+                 force_llm: bool = False) -> bool:
     print(f"\n{cfg['name']}")
     dry_run = html_file is not None
 
@@ -62,6 +65,8 @@ def run_provider(cfg: dict, amount: float, mid: ReferenceRate | None,
 
     # 2. Extract: Beautiful Soup first, Gemini only if that fails
     try:
+        if force_llm:
+            raise ExtractionError("skipped on purpose (--force-llm)")
         quote = ExtractedQuote(**extract_with_selectors(html, cfg, amount), capture_id=capture_id)
         print("  OK    extracted with Beautiful Soup")
     except (ExtractionError, ValidationError) as e:
@@ -100,6 +105,7 @@ def main():
     ap.add_argument("--amount", type=float, default=1000.0, help="AUD to send (default 1000)")
     ap.add_argument("--html", help="re-run extraction on a saved page (needs --provider)")
     ap.add_argument("--show", action="store_true", help="show the browser window")
+    ap.add_argument("--force-llm", action="store_true", help="skip Beautiful Soup and test the Gemini fallback")
     args = ap.parse_args()
 
     targets = [p for p in PROVIDERS if not args.provider or p["id"] == args.provider]
@@ -119,7 +125,7 @@ def main():
     except Exception as e:
         print(f"Warning: couldn't get the mid-market rate ({_short(e)}); skipping the 5% check.")
 
-    ok = sum(run_provider(cfg, args.amount, mid, args.html, headless=not args.show) for cfg in targets)
+    ok = sum(run_provider(cfg, args.amount, mid, args.html, headless=not args.show, force_llm=args.force_llm) for cfg in targets)
     print(f"\n{ok} of {len(targets)} providers stored" + (" (dry run)" if args.html else ""))
     flush()
 
