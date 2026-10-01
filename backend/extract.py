@@ -49,8 +49,11 @@ def _selected_text(soup: BeautifulSoup, css: str | None) -> str | None:
 
 # ------------------------------------------------------------------ finders
 
-def find_fee(text: str):
-    """Returns (fee_type, amount, snippet) or None. Checks fixed, then percent, then zero."""
+def find_fee(text: str, send_amount: float | None = None):
+    """Returns (fee_type, amount, snippet) or None. Checks fixed, then percent, then zero.
+
+    Matches that can't be a real fee are skipped (a fixed fee over 10% of the amount,
+    a percentage over 10) so promo text like "transfer up to A$1,000" isn't misread."""
     patterns = [
         ("fixed", rf"(?:transfer\s+)?fees?\b[^0-9%]{{0,40}}?{MONEY}\s?({NUM})"),
         ("fixed", rf"{MONEY}\s?({NUM})\s*(?:transfer\s+)?fee"),
@@ -58,13 +61,27 @@ def find_fee(text: str):
         ("percent", rf"fees?\b[^0-9%]{{0,40}}?({NUM})\s*%"),
     ]
     for fee_type, pat in patterns:
-        m = re.search(pat, text, re.I)
-        if m:
-            return fee_type, _num(m.group(1)), _window(text, m.start(), m.end())
+        for m in re.finditer(pat, text, re.I):
+            amount = _num(m.group(1))
+            if fee_type == "percent" and amount > 10:
+                continue
+            if fee_type == "fixed" and send_amount and amount > 0.10 * send_amount:
+                continue
+            return fee_type, amount, _window(text, m.start(), m.end())
     m = re.search(r"\b(?:no|zero)\s+(?:transfer\s+)?fees?\b|\b0\s+fees?\b", text, re.I)
     if m:
         return "zero", 0.0, _window(text, m.start(), m.end())
     return None
+
+
+def find_fee_regex(text: str, pattern: str):
+    """Provider-specific fee: `pattern` has one group capturing the AUD amount,
+    e.g. r"Bank transfer\\s+(\\d[\\d,]*(?:\\.\\d+)?)\\s*AUD". 0 becomes a 'zero' fee."""
+    m = re.search(pattern, text, re.I)
+    if not m:
+        return None
+    amount = _num(m.group(1))
+    return ("zero" if amount == 0 else "fixed"), amount, _window(text, m.start(), m.end(), pad=25)
 
 
 def find_rate(text: str, send: str = "AUD", recv: str = "INR"):
@@ -81,7 +98,7 @@ def find_rate(text: str, send: str = "AUD", recv: str = "INR"):
 
 
 SPEED_RE = re.compile(
-    r"instant(?:ly)?|within\s+minutes|in\s+minutes|same[\s-]day|next[\s-]day|"
+    r"instant(?:ly)?|in\s+seconds|within\s+minutes|in\s+minutes|same[\s-]day|next[\s-]day|"
     r"\d+\s*(?:-|–|to)\s*\d+\s*(?:business\s+|working\s+)?(?:days|hours)|"
     r"\d+\s*(?:business\s+|working\s+)?(?:days?|hours?|minutes?)",
     re.I,
@@ -98,7 +115,7 @@ def speed_hours(speed: str | None) -> tuple[float | None, float | None]:
     if not speed:
         return None, None
     s = speed.lower()
-    if "instant" in s or "minute" in s:
+    if "instant" in s or "second" in s or "minute" in s:
         return 0.0, 1.0
     if "same" in s:
         return 0.0, 24.0
@@ -119,7 +136,11 @@ def extract_with_selectors(html, cfg: dict, send_amount: float = 1000.0,
     page = re.sub(r"\s+", " ", soup.get_text(" ")).strip()
     sel = cfg.get("selectors", {})
 
-    fee = find_fee(_selected_text(soup, sel.get("fee")) or page)
+    fee_text = _selected_text(soup, sel.get("fee")) or page
+    fee = None
+    if cfg.get("fee_regex"):
+        fee = find_fee_regex(fee_text, cfg["fee_regex"])
+    fee = fee or find_fee(fee_text, send_amount)
     rate = find_rate(_selected_text(soup, sel.get("rate")) or page, send, recv)
     speed = find_speed(_selected_text(soup, sel.get("speed")) or page)
 
