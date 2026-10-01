@@ -1,23 +1,33 @@
 .auth-main {
   flex-grow: 1;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding-top: 64px;
-  padding-bottom: 64px;
+  position: relative;
+  overflow: hidden;
+  padding: 72px 0;
+  background-color: var(--bg);
+  background-image: radial-gradient(rgba(122, 46, 142, 0.18) 1.5px, transparent 1.5px);
+  background-size: 26px 26px;
 }
+.auth-main::before, .auth-main::after { content: ''; position: absolute; border-radius: 50%; pointer-events: none; }
+.auth-main::before { width: 460px; height: 460px; background: var(--hero); left: -190px; bottom: -200px; }
+.auth-main::after { width: 200px; height: 200px; background: var(--pop); right: -60px; top: 40px; opacity: .85; }
+.auth-inner { position: relative; z-index: 1; display: flex; align-items: center; justify-content: center; gap: 72px; }
+.auth-art { flex: 1 1 0; max-width: 460px; }
+.auth-art h2 { margin: 0 0 28px; font-family: var(--font-heading); font-size: 38px; line-height: 1.1; letter-spacing: -1.2px; font-weight: 600; }
+.auth-chips { display: grid; gap: 12px; max-width: 380px; }
+.auth-chips .rc { animation: none; }
+.auth-card { flex: 0 0 520px; }
 
 .auth-card {
   width: 100%;
   max-width: 560px;
   background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 16px;
+  border: 2px solid var(--text);
+  border-radius: 24px;
   padding: 48px;
   display: flex;
   flex-direction: column;
   gap: 24px;
-  box-shadow: 0 12px 32px rgba(15, 42, 44, 0.08);
+  box-shadow: 10px 10px 0 var(--text);
 }
 
 .auth-card h1 {
@@ -137,8 +147,12 @@ p.google-missing {
 }
 .auth-switch a { font-weight: 600; }
 
+@media (max-width: 1000px) {
+  .auth-art { display: none; }
+  .auth-card { flex: 1 1 auto; max-width: 560px; }
+}
 @media (max-width: 640px) {
-  .auth-main { padding-top: 24px; }
+  .auth-main { padding: 24px 0 40px; }
   .auth-card { padding: 24px; border-radius: 12px; }
   .auth-card h1 { font-size: 26px; }
 }

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import Header from '../components/Header';
+import Footer from '../components/Footer';
 import { getQuoteDetail } from '../lib/api';
 import { money, shortTime } from '../lib/format';
 import './detail-page.css';
@@ -49,6 +50,19 @@ export default function DetailPage() {
             {data.source === 'mock' && (
               <p className="sample-notice">
                 Sample data: FeePrint hasn&apos;t collected real prices for this corridor yet.
+              </p>
+            )}
+            {data.provider.is_promo && (
+              <p className="sample-notice">
+                New-customer offer: the rate and fee on {data.provider.name}&apos;s page apply to a
+                first transfer only. Returning customers may pay more.
+              </p>
+            )}
+            {data.provider.beats_reference && (
+              <p className="sample-notice">
+                This provider&apos;s rate is at or above our daily reference rate, so no markup is
+                shown. The reference is an ECB rate published once a day, so live provider rates
+                can sit slightly above it.
               </p>
             )}
             <div className="detail-heading">
@@ -193,6 +207,7 @@ function CalcRow({ n, label, value, strong, last }) {
       <span className="calc-n">{n}</span>
       <span className={strong ? 'calc-label-strong' : undefined}>{label}</span>
       <span className={`calc-value${strong ? ' calc-value-strong' : ''}`}>{value}</span>
+      <Footer />
     </div>
   );
 }

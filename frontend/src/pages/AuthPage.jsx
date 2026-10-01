@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
+import Footer from '../components/Footer';
 import GoogleButton from '../components/GoogleButton';
 import { useAuth } from '../lib/auth-context';
 import './auth-page.css';
@@ -42,7 +43,16 @@ export default function AuthPage({ mode }) {
   return (
     <div className="fp-page">
       <Header />
-      <main className="auth-main container">
+      <main className="auth-main">
+        <div className="container auth-inner">
+        <aside className="auth-art" aria-hidden="true">
+          <h2>See the real cost before you send.</h2>
+          <div className="auth-chips">
+            <div className="rc rc-1"><span>Advertised fee</span><b>A$0</b></div>
+            <div className="rc rc-2"><span>Hidden in the rate</span><b>&minus;A$20</b></div>
+            <div className="rc rc-3"><span>Arrives</span><b>₹65,435</b></div>
+          </div>
+        </aside>
         <div className="auth-card">
           <h1>{isSignUp ? 'Create your account' : 'Welcome back'}</h1>
           <p className="auth-sub">
@@ -116,7 +126,9 @@ export default function AuthPage({ mode }) {
             )}
           </p>
         </div>
+        </div>
       </main>
+      <Footer />
     </div>
   );
 }

@@ -22,6 +22,7 @@ export default function ProviderCard({ provider, detailHref }) {
     <article className={`provider-card${isBest ? ' is-best' : ''}`}>
       <div className="pc-name">
         <span className="pc-name-text">{provider.name}</span>
+        {provider.is_promo && <span className="pc-badge badge-neutral">New-customer offer</span>}
         {provider.badge && (
           <span className={`pc-badge ${BADGE_CLASS[provider.badge]}`}>
             {BADGE_TEXT[provider.badge]}
@@ -39,12 +40,16 @@ export default function ProviderCard({ provider, detailHref }) {
       </div>
       <div className="pc-metric pc-markup">
         <span className="pc-metric-label">FX markup</span>
-        <span className="pc-metric-value">{provider.fx_markup_pct.toFixed(2)}%</span>
+        <span className="pc-metric-value">
+          {provider.beats_reference ? 'None*' : `${provider.fx_markup_pct.toFixed(2)}%`}
+        </span>
       </div>
       <div className="pc-metric pc-total">
         <span className="pc-metric-label">Total cost</span>
         <span className="pc-metric-value">
-          {money(provider.total_cost)} {provider.recipient_currency} ({provider.total_cost_pct.toFixed(2)}%)
+          {provider.beats_reference
+            ? 'None*'
+            : `${money(provider.total_cost)} ${provider.recipient_currency} (${provider.total_cost_pct.toFixed(2)}%)`}
         </span>
       </div>
       <div className="pc-metric pc-speed">

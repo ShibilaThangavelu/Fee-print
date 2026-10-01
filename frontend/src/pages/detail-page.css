@@ -85,7 +85,7 @@
   gap: 12px;
   align-items: baseline;
   padding: 14px 0;
-  border-bottom: 1px solid #E6EBE8;
+  border-bottom: 1px solid #E6D9EB;
 }
 
 .calc-row-last { border-bottom: none; }
@@ -117,7 +117,7 @@
   height: 240px;
   border-radius: 10px;
   border: 1px solid var(--border);
-  background: repeating-linear-gradient(135deg, var(--bg) 0 12px, #EAEEEB 12px 24px);
+  background: repeating-linear-gradient(135deg, var(--bg) 0 12px, #EAE0EE 12px 24px);
   display: flex;
   align-items: center;
   justify-content: center;

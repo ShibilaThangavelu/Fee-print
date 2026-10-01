@@ -127,3 +127,7 @@
   color: #5c4500;
   font-size: 0.9rem;
 }
+
+.empty-state { padding: 2rem 1rem; text-align: center; border: 1px dashed #DCCBE2; border-radius: 12px; margin: 1rem 0; }
+.empty-state h2 { margin: 0 0 .5rem; font-size: 1.1rem; }
+.empty-state p { margin: 0; color: #6B5577; }

@@ -20,15 +20,15 @@ export default function Header({ mobileAction }) {
       <div className="fp-header-inner container">
         <Link to="/" className="fp-logo">
           <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
-            <rect x="1" y="1" width="26" height="26" rx="7" stroke="#0B6B4E" strokeWidth="2" />
-            <path d="M8 18l4-4 3 3 5-6" stroke="#0B6B4E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <rect x="1" y="1" width="26" height="26" rx="7" stroke="#7A2E8E" strokeWidth="2" />
+            <path d="M8 18l4-4 3 3 5-6" stroke="#7A2E8E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
           <span>FeePrint</span>
         </Link>
         <nav aria-label="Main" className="fp-nav">
           <Link to="/">Compare</Link>
-          <a href="#how-we-calculate">How we calculate</a>
-          <a href="#providers-covered">Providers covered</a>
+          <Link to="/#how-we-calculate">How it works</Link>
+          <Link to="/#providers-covered">Providers covered</Link>
         </nav>
 
         <div className="fp-right">

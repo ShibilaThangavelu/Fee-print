@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import Header from '../components/Header';
+import Footer from '../components/Footer';
 import ProviderCard from '../components/ProviderCard';
 import { getQuotes } from '../lib/api';
 import { money, shortTime } from '../lib/format';
@@ -66,7 +67,7 @@ export default function ResultsPage() {
           </div>
           {data && (
             <div className="mid-rate-card">
-              <span>Mid-market rate (the benchmark)</span>
+              <span>Daily reference rate (ECB mid-market)</span>
               <span className="mono">1 AUD = {money(data.mid_market_rate.rate)} {to}</span>
               <span>
                 Ideal result: {money(data.ideal_amount)} {to} · as of {shortTime(data.mid_market_rate.as_of)}
@@ -107,6 +108,16 @@ export default function ResultsPage() {
 
             {data && (
               <>
+                {sorted.length === 0 && (
+                  <div className="empty-state">
+                    <h2>No current prices for this corridor</h2>
+                    <p>
+                      We hide prices older than 24 hours rather than show you something out of date.
+                      Try again later or <Link to="/">search another amount</Link>.
+                    </p>
+                  </div>
+                )}
+
                 <div className="results-list">
                   {sorted.map((p) => (
                     <ProviderCard
@@ -127,16 +138,24 @@ export default function ResultsPage() {
                   </div>
                 )}
 
+                {sorted.some((p) => p.beats_reference) && (
+                  <p className="results-disclaimer">
+                    *No markup shown: the provider&apos;s rate is at or above the daily ECB reference
+                    rate (which is published once a day, so live rates can differ slightly).
+                  </p>
+                )}
                 <p className="results-disclaimer">
                   Estimates based on each provider&apos;s publicly displayed prices at the time
                   shown. General information, not financial advice. Confirm the final amount with
-                  the provider before you send. Provider names are placeholders in this mock-up.
+                  the provider before you send.
+                  {data.source === 'mock' && ' Provider names and prices here are placeholders.'}
                 </p>
               </>
             )}
           </>
         )}
       </main>
+      <Footer />
     </div>
   );
 }

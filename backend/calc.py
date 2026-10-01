@@ -22,6 +22,7 @@ change with the amount. Tiered pricing isn't modelled yet.
 
 from __future__ import annotations
 
+import re
 from datetime import datetime, timedelta, timezone
 
 HIDE_AFTER_MINUTES = 24 * 60  # older than this: hidden from results
@@ -143,8 +144,13 @@ def build_provider(row: dict, amount: float, mid_rate: float, now: datetime) -> 
     if status == "stale":
         note = "price last checked over an hour ago and may have changed"
 
+    promo_text = f"{row['fee_snippet']} {row['rate_snippet']}"
     return {
         "id": row["provider_id"],
+        # True when the page text shows a first-time / welcome offer, so the UI can say so.
+        "is_promo": bool(re.search(r"welcome|first[\s-]transfer|new customer|first[\s-]time", promo_text, re.I)),
+        # True when the provider's rate is at or above the (daily) reference rate: no markup to show.
+        "beats_reference": result["total_cost"] <= 0,
         "name": row.get("provider_name") or row["provider_id"],
         "fee_type": row["fee_type"],
         "fee_billing": "deducted",

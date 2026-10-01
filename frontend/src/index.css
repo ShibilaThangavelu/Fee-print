@@ -1,22 +1,25 @@
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=IBM+Plex+Mono:wght@500;600&family=Public+Sans:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=DM+Mono:wght@500&family=DM+Sans:wght@400;500;600;700&display=swap');
 
 :root {
-  --bg: #F2F4F1;
-  --white: #FFFFFF;
-  --text: #0F2A2C;
-  --muted: #45585A;
-  --accent: #0B6B4E;
-  --accent-dark: #08513B;
-  --border: #D9E0DC;
-  --border-strong: #9DB0AA;
-  --tint-bg: #E1F0EA;
+  --bg: #EFE8F1;
+  --white: #FBF8FC;
+  --text: #24102E;
+  --muted: #66506F;
+  --accent: #7A2E8E;
+  --accent-dark: #5B2170;
+  --border: #DCCBE2;
+  --border-strong: #B99FC5;
+  --tint-bg: #E7D5EC;
   --warn-bg: #FBEFD9;
   --warn-text: #7A4A00;
-  --chip-bg: #EEF1EF;
+  --chip-bg: #EAE0EE;
 
-  --font-heading: 'Bricolage Grotesque', Helvetica, sans-serif;
-  --font-mono: 'IBM Plex Mono', monospace;
-  --font-body: 'Public Sans', Helvetica, sans-serif;
+  --hero: #4B1B5E;
+  --pop: #E08A5F;
+  --lemon: #E9CB72;
+  --font-heading: 'Unbounded', 'DM Sans', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+  --font-body: 'DM Sans', Helvetica, sans-serif;
 }
 
 * { box-sizing: border-box; }
