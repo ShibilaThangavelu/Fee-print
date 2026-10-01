@@ -115,3 +115,15 @@
   .results-heading h1 { font-size: 28px; }
   .mid-rate-card { align-items: flex-start; width: 100%; }
 }
+
+/* Shown when the API is serving sample data instead of scraped prices */
+.sample-notice {
+  margin: 0 0 16px;
+  padding: 10px 14px;
+  border: 1px solid var(--border, #d9d9d9);
+  border-left-width: 4px;
+  border-radius: 6px;
+  background: #fff8e6;
+  color: #5c4500;
+  font-size: 0.9rem;
+}
