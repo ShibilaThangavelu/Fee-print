@@ -161,3 +161,41 @@
   .calc-card { width: 100%; }
   .calc-row { grid-template-columns: 24px minmax(0, 1fr) auto; }
 }
+
+/* Shown when the API is serving sample data instead of scraped prices */
+.sample-notice {
+  margin: 0 0 16px;
+  padding: 10px 14px;
+  border: 1px solid var(--border, #d9d9d9);
+  border-left-width: 4px;
+  border-radius: 6px;
+  background: #fff8e6;
+  color: #5c4500;
+  font-size: 0.9rem;
+}
+
+.calc-formula {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 400;
+  overflow-wrap: anywhere;
+}
+
+.evidence-quote-label {
+  margin: 0 0 4px;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.evidence-quotes blockquote {
+  margin: 0 0 14px;
+  padding: 8px 12px;
+  border-left: 3px solid var(--accent-dark);
+  background: rgba(0, 0, 0, 0.03);
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}
+
+.evidence-hash { overflow-wrap: anywhere; }

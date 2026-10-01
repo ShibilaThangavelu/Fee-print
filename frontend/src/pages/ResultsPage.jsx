@@ -75,6 +75,12 @@ export default function ResultsPage() {
           )}
         </div>
 
+        {data?.source === 'mock' && (
+          <p className="sample-notice">
+            Sample data: FeePrint hasn&apos;t collected real prices for this corridor yet.
+          </p>
+        )}
+
         {error && (
           <p className="results-error">
             Couldn&apos;t reach the FeePrint API ({error}). Is the backend running on port 8000?
