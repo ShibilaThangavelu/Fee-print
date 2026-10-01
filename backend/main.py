@@ -24,6 +24,10 @@ import calc
 import data
 import db
 
+from observability import init_sentry  # noqa: E402
+
+init_sentry("api")  # no-op unless SENTRY_DSN is set in backend/.env
+
 app = FastAPI(title="FeePrint API", version="0.2.0")
 
 # Local Vite dev server (and a couple of common alternates) need CORS.

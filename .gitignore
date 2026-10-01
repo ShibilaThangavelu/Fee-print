@@ -16,3 +16,7 @@ __pycache__/
 
 # Saved provider pages (evidence) - can be large
 backend/captures/
+
+# local env files (keep the .example ones)
+.env.local
+*.local

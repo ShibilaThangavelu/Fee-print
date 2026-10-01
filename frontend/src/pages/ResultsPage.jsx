@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { track } from '../lib/analytics';
 import ProviderCard from '../components/ProviderCard';
 import { getQuotes } from '../lib/api';
 import { money, shortTime } from '../lib/format';
@@ -40,7 +41,11 @@ export default function ResultsPage() {
     setData(null);
     setError(null);
     getQuotes({ amount, to, method })
-      .then((res) => { if (!cancelled) setData(res); })
+      .then((res) => {
+        if (cancelled) return;
+        setData(res);
+        track('results_viewed', { to, provider_count: res.providers.length, source: res.source });
+      })
       .catch((err) => { if (!cancelled) setError(err.message); });
     return () => { cancelled = true; };
   }, [amount, to, method]);

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { track } from '../lib/analytics';
 import { getMidRate } from '../lib/api';
 import { money, shortTime } from '../lib/format';
 import { ClosingCta, DifferSection, HowSection, ProvidersSection, SafetySection, TrapDemo, WhySection } from '../components/HomeSections';
@@ -55,6 +56,7 @@ export default function SearchPage() {
     setAmountError('');
     // Our prices are read from each provider's bank-transfer pricing.
     const params = new URLSearchParams({ amount: numeric, to: dest, method: 'bank_transfer' });
+    track('search_submitted', { amount: numeric, to: dest });
     navigate(`/results?${params.toString()}`);
   }
 

@@ -29,6 +29,7 @@ from fetch import fetch_page, save_capture_file  # noqa: E402
 from llm import llm_extract  # noqa: E402
 from models import Capture, ExtractedQuote, Provider, ReferenceRate, check_against_mid  # noqa: E402
 from providers import PROVIDERS  # noqa: E402
+from observability import flush, init_sentry, report_scrape_failure  # noqa: E402
 from rates import fetch_mid_rate  # noqa: E402
 
 
@@ -51,6 +52,7 @@ def run_provider(cfg: dict, amount: float, mid: ReferenceRate | None,
             html, final_url = fetch_page(cfg, amount, headless=headless)
         except Exception as e:
             print(f"  FAIL  could not load page: {_short(e)}")
+            report_scrape_failure(cfg["id"], f"could not load page: {_short(e)}")
             return False
         path, sha = save_capture_file(cfg["id"], html)
         capture_id = db.save_capture(
@@ -70,6 +72,7 @@ def run_provider(cfg: dict, amount: float, mid: ReferenceRate | None,
             print("  OK    extracted with Gemini fallback")
         except Exception as e2:
             print(f"  FAIL  Gemini fallback: {_short(e2)}")
+            report_scrape_failure(cfg["id"], f"extraction failed: {_short(e2)}")
             return False
 
     # 3. Cross-check against the mid-market rate
@@ -77,6 +80,7 @@ def run_provider(cfg: dict, amount: float, mid: ReferenceRate | None,
         problems = check_against_mid(quote, mid)
         if problems:
             print(f"  FAIL  rejected: {'; '.join(problems)}")
+            report_scrape_failure(cfg["id"], f"rejected: {'; '.join(problems)}")
             return False
 
     fee = {"fixed": f"A${quote.fee_amount:.2f}", "percent": f"{quote.fee_amount}%", "zero": "no fee"}
@@ -104,6 +108,7 @@ def main():
     if args.html and len(targets) != 1:
         sys.exit("--html needs --provider")
 
+    init_sentry("scraper")
     db.init_db()
     mid = None
     try:
@@ -116,6 +121,7 @@ def main():
 
     ok = sum(run_provider(cfg, args.amount, mid, args.html, headless=not args.show) for cfg in targets)
     print(f"\n{ok} of {len(targets)} providers stored" + (" (dry run)" if args.html else ""))
+    flush()
 
 
 if __name__ == "__main__":

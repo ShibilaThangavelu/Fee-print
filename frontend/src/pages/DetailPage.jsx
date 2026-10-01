@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { track } from '../lib/analytics';
 import { getQuoteDetail } from '../lib/api';
 import { money, shortTime } from '../lib/format';
 import './detail-page.css';
@@ -26,7 +27,11 @@ export default function DetailPage() {
     setData(null);
     setError(null);
     getQuoteDetail(providerId, { amount, to, method })
-      .then((res) => { if (!cancelled) setData(res); })
+      .then((res) => {
+        if (cancelled) return;
+        setData(res);
+        track('provider_opened', { provider: providerId, to });
+      })
       .catch((err) => { if (!cancelled) setError(err.message); });
     return () => { cancelled = true; };
   }, [providerId, amount, to, method]);
@@ -67,11 +72,10 @@ export default function DetailPage() {
             )}
             <div className="detail-heading">
               <div>
-                <h1>{data.provider.name}: how we worked it out</h1>
+                <h1>{data.provider.name}</h1>
                 <p>
-                  AUD {money(Number(amount), 0)} to {data.corridor.to_country} &middot;{' '}
-                  {method === 'debit_card' ? 'debit card' : 'bank transfer'} &middot;{' '}
-                  {data.provider.checked_label}
+                  Sending A${money(Number(amount), 0)} to {data.corridor.to_country} by{' '}
+                  {method === 'debit_card' ? 'debit card' : 'bank transfer'}. {data.provider.checked_label}.
                 </p>
               </div>
               <div className="detail-amount">
@@ -80,9 +84,11 @@ export default function DetailPage() {
               </div>
             </div>
 
+            {steps && <Summary data={data} to={to} />}
+
             <div className="detail-columns">
               <section aria-labelledby="calc" className="calc-card">
-                <h2 id="calc">The calculation</h2>
+                <h2 id="calc">How we worked it out</h2>
                 {steps ? (
                   <>
                     <CalcRow n={1} label="You send" value={`AUD ${money(Number(amount))}`} />
@@ -148,47 +154,56 @@ export default function DetailPage() {
               </section>
 
               <section aria-labelledby="evidence" className="evidence-card">
-                <h2 id="evidence">Evidence</h2>
+                <h2 id="evidence">Where this came from</h2>
                 {steps ? (
-                  <div className="evidence-quotes">
-                    <p className="evidence-quote-label">What the page said about the fee</p>
-                    <blockquote>{ev.fee_text}</blockquote>
-                    <p className="evidence-quote-label">What the page said about the rate</p>
-                    <blockquote>{ev.rate_text}</blockquote>
-                  </div>
-                ) : (
-                  <div
-                    role="img"
-                    aria-label={`Placeholder for the saved screenshot of ${data.provider.name}'s pricing page`}
-                    className="evidence-shot"
-                  >
-                    [Saved screenshot of the provider&apos;s pricing page]
-                  </div>
-                )}
-                <dl className="evidence-list">
-                  <dt>Captured</dt>
-                  <dd>{new Date(ev.captured_at).toLocaleString('en-AU')}</dd>
-                  <dt>Source page</dt>
-                  <dd>
-                    <a href={ev.source_url} target="_blank" rel="noreferrer">
-                      {steps ? hostOf(ev.source_url) : `[${data.provider.name} pricing page URL]`}
+                  <>
+                    <a href={ev.source_url} className="snapshot-btn" target="_blank" rel="noreferrer">
+                      Open {hostOf(ev.source_url)}
                     </a>
-                  </dd>
-                  <dt>Integrity hash</dt>
-                  <dd className="evidence-hash">SHA-256 {ev.sha256}</dd>
-                  <dt>Kept unchanged until</dt>
-                  <dd>{ev.retention_until}</dd>
-                  <dt>{steps ? 'Read with' : 'Parser version'}</dt>
-                  <dd>{ev.parser_version}</dd>
-                </dl>
-                <a href={ev.source_url} className="snapshot-btn" target="_blank" rel="noreferrer">
-                  {steps ? 'Open source page' : 'Open full snapshot'}
-                </a>
+                    <p className="evidence-when">
+                      We read this page on {new Date(ev.captured_at).toLocaleString('en-AU', { dateStyle: 'medium', timeStyle: 'short' })}.
+                    </p>
+                    <div className="evidence-quotes">
+                      <p className="evidence-quote-label">The page said, about the fee:</p>
+                      <blockquote>{ev.fee_text}</blockquote>
+                      <p className="evidence-quote-label">And about the rate:</p>
+                      <blockquote>{ev.rate_text}</blockquote>
+                    </div>
+                    <details className="evidence-tech">
+                      <summary>Technical details</summary>
+                      <dl className="evidence-list">
+                        <dt>Page fingerprint</dt>
+                        <dd className="evidence-hash" title={ev.sha256}>{ev.sha256.slice(0, 16)}&hellip;</dd>
+                        <dt>Saved until</dt>
+                        <dd>{ev.retention_until}</dd>
+                        <dt>Read with</dt>
+                        <dd>{ev.parser_version}</dd>
+                      </dl>
+                    </details>
+                  </>
+                ) : (
+                  <>
+                    <div
+                      role="img"
+                      aria-label={`Placeholder for the saved screenshot of ${data.provider.name}'s pricing page`}
+                      className="evidence-shot"
+                    >
+                      [Saved screenshot of the provider&apos;s pricing page]
+                    </div>
+                    <dl className="evidence-list">
+                      <dt>Captured</dt>
+                      <dd>{new Date(ev.captured_at).toLocaleString('en-AU')}</dd>
+                      <dt>Source page</dt>
+                      <dd>[{data.provider.name} pricing page URL]</dd>
+                    </dl>
+                  </>
+                )}
               </section>
             </div>
           </>
         )}
       </main>
+      <Footer />
     </div>
   );
 }
@@ -207,7 +222,19 @@ function CalcRow({ n, label, value, strong, last }) {
       <span className="calc-n">{n}</span>
       <span className={strong ? 'calc-label-strong' : undefined}>{label}</span>
       <span className={`calc-value${strong ? ' calc-value-strong' : ''}`}>{value}</span>
-      <Footer />
+    </div>
+  );
+}
+
+function Summary({ data, to }) {
+  const p = data.provider;
+  const feeAud = p.fee || 0;
+  return (
+    <div className="tiles">
+      <div className="tile"><span>Fee</span><b>{feeAud === 0 ? 'None' : `A$${money(feeAud)}`}</b></div>
+      <div className="tile"><span>Exchange rate</span><b>1 AUD = {p.provider_rate.toFixed(2)} {to}</b></div>
+      <div className="tile"><span>Rate gap</span><b>{p.beats_reference ? 'None*' : `${p.fx_markup_pct.toFixed(2)}%`}</b></div>
+      <div className="tile"><span>Speed</span><b>{p.speed_label}</b></div>
     </div>
   );
 }
