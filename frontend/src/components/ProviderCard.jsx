@@ -30,9 +30,12 @@ export default function ProviderCard({ provider, detailHref }) {
         )}
       </div>
 
-      <span className={`pc-amount${isBest ? ' pc-amount-best' : ''}`}>
-        {money(provider.recipient_gets)} {provider.recipient_currency}
-      </span>
+      <div className="pc-amount">
+        <span className="pc-amount-label">Recipient gets</span>
+        <span className={`pc-amount-value${isBest ? ' pc-amount-best' : ''}`}>
+          {money(provider.recipient_gets)} {provider.recipient_currency}
+        </span>
+      </div>
 
       <div className="pc-metric pc-fee">
         <span className="pc-metric-label">Fee</span>

@@ -9,6 +9,12 @@ export default function Header({ mobileAction }) {
   const onAuthPage = location.pathname === '/signin' || location.pathname === '/signup';
   // Remember the current page so sign-in can bring the user back here.
   const here = { from: location.pathname + location.search };
+  const path = location.pathname;
+  const hash = location.hash;
+  const compareActive = !hash && (path === '/' || path.startsWith('/results') || path.startsWith('/detail'));
+  const howActive = path === '/' && hash === '#how-we-calculate';
+  const providersActive = path === '/' && hash === '#providers-covered';
+  const navProps = (on) => (on ? { className: 'active', 'aria-current': 'page' } : {});
 
   async function handleSignOut() {
     await signOut();
@@ -26,9 +32,9 @@ export default function Header({ mobileAction }) {
           <span>FeePrint</span>
         </Link>
         <nav aria-label="Main" className="fp-nav">
-          <Link to="/">Compare</Link>
-          <Link to="/#how-we-calculate">How it works</Link>
-          <Link to="/#providers-covered">Providers covered</Link>
+          <Link to="/" {...navProps(compareActive)}>Compare</Link>
+          <Link to="/#how-we-calculate" {...navProps(howActive)}>How it works</Link>
+          <Link to="/#providers-covered" {...navProps(providersActive)}>Providers covered</Link>
         </nav>
 
         <div className="fp-right">

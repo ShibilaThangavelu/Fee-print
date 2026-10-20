@@ -63,7 +63,7 @@ export default function ResultsPage() {
       <main className="results-main container">
         <div className="results-heading">
           <div>
-            <h1>AUD {money(Number(amount), 0)} to {data?.corridor?.to_country || '…'}</h1>
+            <h1>AUD {money(Number(amount), 0)} to <span className="h1-accent">{data?.corridor?.to_country || '…'}</span></h1>
             <p className="results-sub">
               Paying by {method === 'debit_card' ? 'debit card' : 'bank transfer'}
               {data ? ` · ${sorted.length} providers compared` : ''} ·{' '}

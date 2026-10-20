@@ -109,11 +109,12 @@
 
 /* ---- modern nav bar ---- */
 .fp-header { position: sticky; top: 0; z-index: 50; background: rgba(251, 248, 252, 0.92); backdrop-filter: blur(10px); }
-.fp-nav { gap: 6px; font-family: var(--font-heading); font-size: 13px; font-weight: 500; letter-spacing: -0.2px; }
-.fp-nav a { padding: 10px 16px; border-radius: 999px; color: var(--muted); transition: background .15s, color .15s; }
+.fp-nav { gap: 6px; font-family: var(--font-heading); font-size: 14px; font-weight: 600; letter-spacing: -0.1px; }
+.fp-nav a { padding: 10px 16px; border-radius: 999px; color: var(--text); transition: background .15s, color .15s; }
 .fp-nav a:hover { background: var(--tint-bg); color: var(--accent-dark); }
-.fp-nav a:first-child { color: var(--text); background: var(--chip-bg); }
-.fp-account { font-family: var(--font-heading); font-size: 13px; font-weight: 500; letter-spacing: -0.2px; }
+.fp-nav a.active { background: var(--hero); color: #fff; font-weight: 800; }
+.fp-nav a.active:hover { background: var(--hero); color: #fff; }
+.fp-account { font-family: var(--font-heading); font-size: 14px; font-weight: 600; letter-spacing: -0.2px; }
 .fp-signin { padding: 10px 14px; border-radius: 999px; }
 .fp-signin:hover { background: var(--tint-bg); color: var(--accent-dark); }
 .fp-signup { padding: 11px 20px; border-radius: 999px; border: 2px solid var(--text); box-shadow: 3px 3px 0 var(--text); transition: transform .12s, box-shadow .12s; }

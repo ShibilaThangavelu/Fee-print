@@ -17,9 +17,10 @@
   margin: 0;
   font-family: var(--font-heading);
   font-size: 40px;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: -1px;
 }
+.results-heading h1 .h1-accent { color: var(--accent); }
 
 .results-sub {
   margin: 8px 0 0;
@@ -34,7 +35,8 @@
   gap: 4px;
   padding: 14px 18px;
   background: var(--white);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-strong);
+  border-left: 5px solid var(--accent);
   border-radius: 12px;
   font-size: 13px;
   color: var(--muted);
@@ -42,9 +44,9 @@
 
 .mid-rate-card .mono {
   font-family: var(--font-mono);
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 600;
-  color: var(--text);
+  color: var(--accent-dark);
 }
 
 .sort-group {
@@ -65,9 +67,10 @@
 }
 
 .sort-btn.active {
-  border-color: var(--text);
-  background: var(--text);
-  color: var(--white);
+  border-color: var(--hero);
+  background: var(--hero);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(75, 27, 94, .3);
 }
 
 .results-list {

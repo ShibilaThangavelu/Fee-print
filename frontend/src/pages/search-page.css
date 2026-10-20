@@ -195,7 +195,7 @@
 .hero::after { width: 260px; height: 260px; background: var(--pop); right: 34%; top: -130px; opacity: .9; }
 .hero-inner { position: relative; z-index: 1; display: flex; gap: 72px; align-items: center; }
 .hero-copy { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 22px; }
-.hero-copy h1 { margin: 0; font-family: var(--font-heading); font-size: 56px; line-height: 1.04; font-weight: 600; letter-spacing: -2px; color: #fff; }
+.hero-copy h1 { margin: 0; font-family: var(--font-heading); font-size: 56px; line-height: 1.04; font-weight: 600; letter-spacing: -1.2px; color: #fff; }
 .hero-lede { margin: 0; font-size: 19px; line-height: 1.5; color: #E8D5EE; max-width: 44ch; }
 .hero-lede em { font-style: normal; font-weight: 700; color: var(--lemon); }
 

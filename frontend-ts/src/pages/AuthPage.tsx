@@ -1,0 +1,141 @@
+// Shared layout for the Sign in and Sign up screens.
+import { useState, type FormEvent } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import GoogleButton from '../components/GoogleButton';
+import { useAuth } from '../lib/auth-context';
+import type { User } from '../types';
+import './auth-page.css';
+
+interface LocationState {
+  from?: string;
+  reason?: string;
+}
+
+export default function AuthPage({ mode }: { mode: 'signin' | 'signup' }) {
+  const isSignUp = mode === 'signup';
+  const { signIn, signUp, signInWithGoogle } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const state = location.state as LocationState | null;
+  // Send people back to where they were (e.g. a results page) after signing in.
+  const from = state?.from || '/';
+  const needsLogin = state?.reason === 'compare';
+
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
+
+  async function run(action: () => Promise<User>) {
+    setError('');
+    setBusy(true);
+    try {
+      await action();
+      navigate(from, { replace: true });
+    } catch (err) {
+      setError(err instanceof Error && err.message ? err.message : 'Something went wrong. Please try again.');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    run(() => (isSignUp ? signUp({ name, email, password }) : signIn({ email, password })));
+  }
+
+  return (
+    <div className="fp-page">
+      <Header />
+      <main className="auth-main">
+        <div className="container auth-inner">
+        <aside className="auth-art" aria-hidden="true">
+          <h2>See the real cost before you send.</h2>
+          <div className="auth-chips">
+            <div className="rc rc-1"><span>Advertised fee</span><b>A$0</b></div>
+            <div className="rc rc-2"><span>Hidden in the rate</span><b>&minus;A$20</b></div>
+            <div className="rc rc-3"><span>Arrives</span><b>₹65,435</b></div>
+          </div>
+        </aside>
+        <div className="auth-card">
+          <h1>{isSignUp ? 'Create your account' : 'Welcome back'}</h1>
+          <p className="auth-sub">
+            {isSignUp
+              ? 'Create a free account to compare providers.'
+              : needsLogin
+                ? 'Sign in to compare providers.'
+                : 'Sign in to your FeePrint account.'}
+          </p>
+
+          <GoogleButton
+            text={isSignUp ? 'signup_with' : 'continue_with'}
+            onCredential={(credential) => run(() => signInWithGoogle(credential))}
+            onError={setError}
+          />
+
+          <div className="auth-divider"><span>or</span></div>
+
+          <form onSubmit={handleSubmit} noValidate>
+            {isSignUp && (
+              <div className="field">
+                <label htmlFor="name">Name</label>
+                <input
+                  id="name"
+                  autoComplete="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+              </div>
+            )}
+
+            <div className="field">
+              <label htmlFor="email">Email</label>
+              <input
+                id="email"
+                type="email"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="field">
+              <label htmlFor="password">Password</label>
+              <input
+                id="password"
+                type="password"
+                autoComplete={isSignUp ? 'new-password' : 'current-password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                minLength={isSignUp ? 8 : undefined}
+                required
+              />
+              {isSignUp && <span className="hint">At least 8 characters.</span>}
+            </div>
+
+            {error && <p className="auth-error" role="alert">{error}</p>}
+
+            <button type="submit" className="auth-submit" disabled={busy}>
+              {busy ? 'Please wait…' : isSignUp ? 'Create account' : 'Sign in'}
+            </button>
+          </form>
+
+          <p className="auth-switch">
+            {isSignUp ? (
+              <>Already have an account? <Link to="/signin" state={{ from, reason: state?.reason }}>Sign in</Link></>
+            ) : (
+              <>New to FeePrint? <Link to="/signup" state={{ from, reason: state?.reason }}>Create an account</Link></>
+            )}
+          </p>
+        </div>
+        </div>
+      </main>
+      <Footer />
+    </div>
+  );
+}

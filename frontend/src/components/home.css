@@ -1,6 +1,6 @@
 /* Landing sections. Colour and font tokens come from index.css. */
 .home-section { padding-top: 96px; scroll-margin-top: 24px; }
-.home-h2 { margin: 0 0 40px; font-family: var(--font-heading); font-size: 40px; line-height: 1.1; letter-spacing: -1.2px; font-weight: 600; }
+.home-h2 { margin: 0 0 40px; font-family: var(--font-heading); font-size: 40px; line-height: 1.1; letter-spacing: -0.8px; font-weight: 600; }
 
 /* ---- hero extras ---- */
 .sticker { display: inline-flex; align-items: center; gap: 12px; align-self: flex-start; background: var(--lemon); color: var(--text); border-radius: 999px; padding: 10px 22px; font-family: var(--font-heading); font-weight: 600; font-size: 15px; transform: rotate(-2.5deg); box-shadow: 4px 4px 0 var(--text); }
@@ -9,7 +9,7 @@
 /* ---- $0 trap ---- */
 .trap { background: var(--text); color: #F7EBFA; margin-top: 64px; padding: 80px 0; }
 .trap-inner { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 64px; align-items: center; }
-.trap h2 { margin: 0 0 12px; font-family: var(--font-heading); font-size: 38px; line-height: 1.1; letter-spacing: -1px; font-weight: 600; color: #fff; }
+.trap h2 { margin: 0 0 12px; font-family: var(--font-heading); font-size: 38px; line-height: 1.1; letter-spacing: -0.6px; font-weight: 600; color: #fff; }
 .trap-copy p { margin: 0 0 28px; font-size: 18px; color: #D9C0E4; }
 .trap-label { display: block; font-size: 14px; font-weight: 600; color: #D9C0E4; margin-bottom: 4px; }
 .trap-amount { font-family: var(--font-mono); font-size: 52px; font-weight: 500; color: #fff; margin-bottom: 8px; }
@@ -84,7 +84,7 @@
 /* ---- closing ---- */
 .closing { margin-top: 96px; background: var(--accent); color: #fff; padding: 80px 0; }
 .closing-inner { display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap; }
-.closing h2 { margin: 0; font-family: var(--font-heading); font-size: 44px; letter-spacing: -1.2px; line-height: 1.1; font-weight: 600; max-width: 14ch; }
+.closing h2 { margin: 0; font-family: var(--font-heading); font-size: 44px; letter-spacing: -0.8px; line-height: 1.1; font-weight: 600; max-width: 14ch; }
 .closing-btn { height: 62px; padding: 0 40px; border-radius: 999px; border: 0; background: var(--lemon); color: var(--text); font-size: 18px; font-weight: 700; transition: transform .12s; }
 .closing-btn:hover { transform: translateY(-2px) rotate(-1deg); }
 

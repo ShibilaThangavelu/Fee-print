@@ -24,9 +24,9 @@ import calc
 import data
 import db
 
-from observability import init_sentry  # noqa: E402
+from observability import init_sentry 
 
-init_sentry("api")  # no-op unless SENTRY_DSN is set in backend/.env
+init_sentry("api")  
 
 app = FastAPI(title="FeePrint API", version="0.2.0")
 

@@ -12,7 +12,7 @@
 .auth-main::after { width: 200px; height: 200px; background: var(--pop); right: -60px; top: 40px; opacity: .85; }
 .auth-inner { position: relative; z-index: 1; display: flex; align-items: center; justify-content: center; gap: 72px; }
 .auth-art { flex: 1 1 0; max-width: 460px; }
-.auth-art h2 { margin: 0 0 28px; font-family: var(--font-heading); font-size: 38px; line-height: 1.1; letter-spacing: -1.2px; font-weight: 600; }
+.auth-art h2 { margin: 0 0 28px; font-family: var(--font-heading); font-size: 38px; line-height: 1.1; letter-spacing: -0.8px; font-weight: 600; }
 .auth-chips { display: grid; gap: 12px; max-width: 380px; }
 .auth-chips .rc { animation: none; }
 .auth-card { flex: 0 0 520px; }

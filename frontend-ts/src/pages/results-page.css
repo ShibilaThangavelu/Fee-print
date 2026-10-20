@@ -1,0 +1,136 @@
+.results-main {
+  padding: 40px 0 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.results-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.results-heading h1 {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+.results-heading h1 .h1-accent { color: var(--accent); }
+
+.results-sub {
+  margin: 8px 0 0;
+  font-size: 16px;
+  color: var(--muted);
+}
+
+.mid-rate-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  padding: 14px 18px;
+  background: var(--white);
+  border: 1px solid var(--border-strong);
+  border-left: 5px solid var(--accent);
+  border-radius: 12px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.mid-rate-card .mono {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--accent-dark);
+}
+
+.sort-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.sort-btn {
+  height: 44px;
+  padding: 0 18px;
+  border-radius: 22px;
+  border: 1.5px solid var(--border-strong);
+  background: var(--white);
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.sort-btn.active {
+  border-color: var(--hero);
+  background: var(--hero);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(75, 27, 94, .3);
+}
+
+.results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.results-loading, .results-error {
+  font-size: 15px;
+  color: var(--muted);
+}
+
+.results-error {
+  color: var(--warn-text);
+  background: var(--warn-bg);
+  padding: 14px 16px;
+  border-radius: 10px;
+}
+
+.hidden-note {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border: 1px dashed var(--border-strong);
+  border-radius: 12px;
+  font-size: 14px;
+  color: var(--muted);
+  flex-wrap: wrap;
+}
+
+.hidden-note a { font-weight: 600; }
+
+.results-disclaimer {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--muted);
+  max-width: 900px;
+}
+
+@media (max-width: 900px) {
+  .results-heading h1 { font-size: 28px; }
+  .mid-rate-card { align-items: flex-start; width: 100%; }
+}
+
+/* Shown when the API is serving sample data instead of scraped prices */
+.sample-notice {
+  margin: 0 0 16px;
+  padding: 10px 14px;
+  border: 1px solid var(--border, #d9d9d9);
+  border-left-width: 4px;
+  border-radius: 6px;
+  background: #fff8e6;
+  color: #5c4500;
+  font-size: 0.9rem;
+}
+
+.empty-state { padding: 2rem 1rem; text-align: center; border: 1px dashed #DCCBE2; border-radius: 12px; margin: 1rem 0; }
+.empty-state h2 { margin: 0 0 .5rem; font-size: 1.1rem; }
+.empty-state p { margin: 0; color: #6B5577; }
